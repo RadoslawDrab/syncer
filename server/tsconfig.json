@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"alwaysStrict": true,
+		"strictNullChecks": true,
+		"exactOptionalPropertyTypes": true,
+		"noImplicitAny": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"baseUrl": ".",
+		"paths": {
+			"src/*": ["./src/*"]
+		}
+	},
+	"exclude": ["node_modules/"]
+}
