@@ -7,9 +7,11 @@
 		"noImplicitAny": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noUncheckedIndexedAccess": true,
-		"baseUrl": ".",
+		"baseUrl": "./",
 		"paths": {
-			"src/*": ["./src/*"]
+			"src/*": ["./src/*"],
+			"controllers/*": ["./src/controllers/*"],
+			"routers/*": ["./src/routers/*"]
 		}
 	},
 	"exclude": ["node_modules/"]
