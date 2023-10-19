@@ -1,11 +1,13 @@
 import express from 'express'
 
-const app = express()
-const port = 3000
+import userRouter from 'routers/users'
 
-app.get('/', (req, res) => {
-	res.send('Hello world').end()
-})
+const app = express()
+const port = process.env['PORT'] || 3000
+
+app.use('/users', userRouter)
+
 app.listen(port, () => {
-	console.log(`Listening on port ${port}`)
+	console.clear()
+	console.log(`Listening on http://localhost:${port}`)
 })
