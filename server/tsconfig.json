@@ -11,7 +11,9 @@
 		"paths": {
 			"src/*": ["./src/*"],
 			"controllers/*": ["./src/controllers/*"],
-			"routers/*": ["./src/routers/*"]
+			"routers/*": ["./src/routers/*"],
+			"middleware/*": ["./src/middleware/*"],
+			"types/*": ["./src/types/*"]
 		}
 	},
 	"exclude": ["node_modules/"]
