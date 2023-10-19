@@ -12,4 +12,12 @@ router.use(checkUser)
 
 router.route('/:id').patch(updateUser).delete(deleteUser)
 
+/*
+  Base route: /users
+  Routes:
+  - /
+    GET, POST
+  - /:id
+    GET, PATCH, DELETE
+*/
 export default router
