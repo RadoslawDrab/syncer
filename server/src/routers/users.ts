@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import { addUser, deleteUser, getUser, getUsers, updateUser } from 'controllers/users'
-import { checkUser } from 'middleware/users'
+import { checkUser } from 'middleware/index'
 
 const router = Router()
 

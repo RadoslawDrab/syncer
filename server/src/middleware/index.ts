@@ -6,3 +6,8 @@ export function checkSong(req: Request, res: Response, next: NextFunction) {
 
 	next()
 }
+export function checkUser(req: Request, res: Response, next: NextFunction) {
+	// Check user's auth
+
+	next()
+}

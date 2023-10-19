@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import { addSong, deleteSong, getSong, getSongs, updateSong } from 'controllers/songs'
-import { checkSong } from 'middleware/songs'
+import { checkSong } from 'middleware/index'
 
 const router = Router()
 
