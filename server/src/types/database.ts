@@ -1,21 +1,21 @@
 /**
  * @param {string} id user's identifier
  * @param {string} name user's name
- * @param {SongItem} songs user's created songs
+ * @param {string[]} songs user's created songs
  * @param {Playlist} playlists user's created playlists
  */
 export interface User {
 	id: string
 	name: string
 	/** user's songs */
-	songs: SongItem[]
+	songIds: string[]
 	/** user's playlists */
 	playlists: Playlist[]
 }
 
 /**
  * @param {string} id Song item identifier
- * @param {number} createAt Timestamp at which song item was created
+ * @param {number} createdAt Timestamp at which song item was created
  * @param {string} userId Creator's id
  * @param {number} lyricOffset Offset of synchronised lyrics
  * @param {number} trimStart Song start trim
@@ -25,7 +25,7 @@ export interface User {
 export interface SongItem {
 	id: string
 	/** Timestamp at which song item was created */
-	createAt: number
+	createdAt: number
 	/** Creator's id */
 	userId: string
 	/** Offset of synchronised lyrics */
@@ -39,7 +39,7 @@ export interface SongItem {
 }
 
 /**
- * @param {string} id Song identifier
+ * @param {string} itunesId Song identifier
  * @param {string} name Song's name
  * @param {string} artist Artist name
  * @param {string} album Album name
@@ -47,9 +47,10 @@ export interface SongItem {
  * @param {string} genre Song's genre
  * @param {boolean} isExplicit Song's explicitness
  * @param {string} lyrics String containing lyrics in SRT format
+ * @param {string} youtubeUrl Song's YouTube URL
  */
 export interface Song {
-	id: string
+	itunesId: string
 	name: string
 	artist: string
 	album: string
@@ -59,12 +60,14 @@ export interface Song {
 	isExplicit: boolean
 	/** String containing lyrics in SRT format */
 	lyrics: string
+	/** Song's YouTube URL */
+	youtubeUrl: string
 }
 
 /**
  * @param {string} id Playlist identifier
  * @param {string} name Playlist name
- * @param {number} createAt Timestamp at which playlist was created
+ * @param {number} createdAt Timestamp at which playlist was created
  * @param {string} userId Creator's id
  * @param {string[]} songIds Song ids added to the playlist
  */
