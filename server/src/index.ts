@@ -1,5 +1,6 @@
 import express from 'express'
 import { initializeApp } from '@firebase/app'
+import cors from 'cors'
 
 import { config } from 'src/auth/firebase'
 import userRouter from 'routers/users'
@@ -11,6 +12,7 @@ const port = process.env['PORT'] || 3000
 
 initializeApp(config)
 
+app.use(cors())
 app.use('/users', userRouter)
 app.use('/songs', songsRouter)
 app.use('/playlists', playlistsRouter)
