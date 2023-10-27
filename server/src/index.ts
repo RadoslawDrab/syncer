@@ -1,11 +1,15 @@
 import express from 'express'
+import { initializeApp } from '@firebase/app'
 
+import { config } from 'src/auth/firebase'
 import userRouter from 'routers/users'
 import songsRouter from 'routers/songs'
 import playlistsRouter from 'routers/playlists'
 
 const app = express()
 const port = process.env['PORT'] || 3000
+
+initializeApp(config)
 
 app.use('/users', userRouter)
 app.use('/songs', songsRouter)
