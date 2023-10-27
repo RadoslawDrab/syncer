@@ -5,7 +5,6 @@
 		"strictNullChecks": true,
 		"exactOptionalPropertyTypes": true,
 		"noImplicitAny": true,
-		"noPropertyAccessFromIndexSignature": true,
 		"noUncheckedIndexedAccess": true,
 		"baseUrl": "./",
 		"paths": {
