@@ -10,12 +10,13 @@ export interface User {
 	/** user's songs */
 	songIds: string[]
 	/** user's playlists */
-	playlists: Playlist[]
+	playlistIds: string[]
 }
 
 /**
  * @param {string} id Song item identifier
  * @param {number} createdAt Timestamp at which song item was created
+ * @param {number} updatedAt Timestamp at which song item was updated
  * @param {string} userId Creator's id
  * @param {number} lyricOffset Offset of synchronised lyrics
  * @param {number} trimStart Song start trim
@@ -26,6 +27,8 @@ export interface SongItem {
 	id: string
 	/** Timestamp at which song item was created */
 	createdAt: number
+	/** Timestamp at which song item was updated */
+	updatedAt: number
 	/** Creator's id */
 	userId: string
 	/** Offset of synchronised lyrics */
@@ -68,6 +71,7 @@ export interface Song {
  * @param {string} id Playlist identifier
  * @param {string} name Playlist name
  * @param {number} createdAt Timestamp at which playlist was created
+ * @param {number} updatedAt Timestamp at which playlist was updated
  * @param {string} userId Creator's id
  * @param {string[]} songIds Song ids added to the playlist
  */
@@ -76,6 +80,8 @@ export interface Playlist {
 	name: string
 	/** Timestamp at which playlist was created */
 	createdAt: number
+	/** Timestamp at which playlist was updated */
+	updatedAt: number
 	/** Creator's id */
 	userId: string
 	/** Song ids added to the playlist */
