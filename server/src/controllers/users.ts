@@ -40,7 +40,7 @@ export async function signInUser(req: Request, res: Response) {
 			res,
 			{
 				code: 200,
-				message: 'User successfully signed in'
+				message: 'User signed in'
 			},
 			{ user, token: jwtToken }
 		)
