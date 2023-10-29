@@ -1,6 +1,6 @@
 import { Response, Request } from 'express'
 
-import { getUser as getFirebaseUser } from 'src/auth'
+import { getUser as getFirebaseUser, getJwtToken } from 'src/auth'
 import { setError, setStatus } from 'src/utils'
 
 export function getUsers(req: Request, res: Response) {
@@ -19,23 +19,27 @@ export function deleteUser(req: Request, res: Response) {
 	res.status(200).json({ status: 'deleted' })
 }
 export async function signInUser(req: Request, res: Response) {
+	const token = req.headers.token
+	const isIdToken = Boolean(req.headers['is-id-token'])
+
+	if (typeof token !== 'string') {
+		setError(res, {
+			code: 400,
+			message: 'No token value'
+		})
+		return
+	}
+
 	try {
-		const token = req.headers.token
-		if (!token || typeof token !== 'string') {
-			setError(res, {
-				code: 400,
-				message: 'No token value'
-			})
-			return
-		}
-		const user = await getFirebaseUser(token)
+		const jwtToken = isIdToken ? await getJwtToken(token) : token
+		const user = await getFirebaseUser(jwtToken)
 		setStatus(
 			res,
 			{
 				code: 200,
 				message: 'User successfully signed in'
 			},
-			{ user }
+			{ user, token: jwtToken }
 		)
 	} catch (error) {
 		setError(res, {
