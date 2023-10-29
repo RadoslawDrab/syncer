@@ -1,8 +1,11 @@
-import { getAuth, signOut } from 'firebase/auth'
+import { User, getAuth, signOut, updateCurrentUser } from 'firebase/auth'
 import { Response, Request } from 'express'
 
 import { getUser as getFirebaseUser, getJwtToken } from 'src/auth'
 import { setError, setStatus } from 'src/utils'
+import { removeData, updateData } from 'src/config/firebase'
+
+import { RequestBody } from 'src/types/server'
 
 const auth = getAuth()
 
@@ -13,10 +16,45 @@ export function getUser(req: Request, res: Response) {
 	res.status(200).json({ status: 'user' })
 }
 export function updateUser(req: Request, res: Response) {
-	res.status(200).json({ status: 'updated' })
+	const user = auth.currentUser as User
+	const body: RequestBody = req.body
+
+	updateCurrentUser(auth, {
+		...user,
+		...body
+	})
+	updateData(`users/${user.uid}`, {
+		...body
+	})
+
+	setStatus(
+		res,
+		{
+			code: 200,
+			message: 'User updated'
+		},
+		null
+	)
 }
-export function deleteUser(req: Request, res: Response) {
-	res.status(200).json({ status: 'deleted' })
+export async function deleteUser(req: Request, res: Response) {
+	try {
+		const user = auth.currentUser
+		await removeData(`users/${user?.uid}`)
+		await user?.delete()
+		setStatus(
+			res,
+			{
+				code: 200,
+				message: 'User deleted'
+			},
+			null
+		)
+	} catch (error) {
+		setError(res, {
+			code: 500,
+			message: error.message || 'Internal server error'
+		})
+	}
 }
 export async function signInUser(req: Request, res: Response) {
 	const token = req.headers.token
