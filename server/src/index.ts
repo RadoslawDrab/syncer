@@ -13,6 +13,8 @@ const port = process.env.PORT || 3000
 initializeApp(config)
 
 app.use(cors())
+app.use(express.json())
+
 app.use('/users', userRouter)
 app.use('/songs', songsRouter)
 app.use('/playlists', playlistsRouter)
