@@ -43,10 +43,8 @@ export function getUser(token: string): Promise<User> {
 			// Creates user in database if they don't exists
 			if (!(await userRef.get()).exists()) {
 				const dbUser: DBUser = {
-					id: user.uid,
-					name: user.displayName || 'User',
-					songIds: [],
-					playlistIds: []
+					songIds: ['0'],
+					playlistIds: ['0']
 				}
 				await userRef.set(dbUser)
 			}

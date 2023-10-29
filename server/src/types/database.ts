@@ -1,12 +1,8 @@
 /**
- * @param {string} id user's identifier
- * @param {string} name user's name
  * @param {string[]} songs user's created songs
  * @param {Playlist} playlists user's created playlists
  */
 export interface User {
-	id: string
-	name: string
 	/** user's songs */
 	songIds: string[]
 	/** user's playlists */
@@ -14,7 +10,6 @@ export interface User {
 }
 
 /**
- * @param {string} id Song item identifier
  * @param {number} createdAt Timestamp at which song item was created
  * @param {number} updatedAt Timestamp at which song item was updated
  * @param {string} userId Creator's id
@@ -24,7 +19,6 @@ export interface User {
  * @param {Song} song Song object
  */
 export interface SongItem {
-	id: string
 	/** Timestamp at which song item was created */
 	createdAt: number
 	/** Timestamp at which song item was updated */
@@ -68,7 +62,6 @@ export interface Song {
 }
 
 /**
- * @param {string} id Playlist identifier
  * @param {string} name Playlist name
  * @param {number} createdAt Timestamp at which playlist was created
  * @param {number} updatedAt Timestamp at which playlist was updated
@@ -76,7 +69,6 @@ export interface Song {
  * @param {string[]} songIds Song ids added to the playlist
  */
 export interface Playlist {
-	id: string
 	name: string
 	/** Timestamp at which playlist was created */
 	createdAt: number
