@@ -2,7 +2,7 @@ import { Response } from 'express'
 
 import { Status } from 'types/server'
 
-export function setStatus<T extends object>(res: Response, status: Status, data: T) {
+export function setStatus<T extends object>(res: Response, status: Status, data: T | null) {
 	res.status(status.code).json({ status, data })
 }
 
