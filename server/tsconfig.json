@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"alwaysStrict": true,
+		"strictNullChecks": true,
+		"exactOptionalPropertyTypes": true,
+		"noImplicitAny": true,
+		"noUncheckedIndexedAccess": true,
+		"baseUrl": "./",
+		"paths": {
+			"src/*": ["./src/*"],
+			"controllers/*": ["./src/controllers/*"],
+			"routers/*": ["./src/routers/*"],
+			"middleware/*": ["./src/middleware/*"],
+			"types/*": ["./src/types/*"]
+		}
+	},
+	"exclude": ["node_modules/"]
+}
