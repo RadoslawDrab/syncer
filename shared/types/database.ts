@@ -1,8 +1,10 @@
 /**
+ * @param {string} id user's id
  * @param {string[]} songs user's created songs
  * @param {Playlist} playlists user's created playlists
  */
 export interface User {
+	id: string
 	/** user's songs */
 	songIds: string[]
 	/** user's playlists */
