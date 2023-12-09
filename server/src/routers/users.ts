@@ -2,7 +2,7 @@ import { Router } from 'express'
 
 import { deleteUser, getUser, getUsers, signInUser, signOutUser, updateUser } from 'controllers/users'
 import { checkUser } from 'middleware/index'
-import { checkToken, checkBody } from 'middleware/users'
+import { checkToken, containsPartialUser } from 'middleware/users'
 
 const router = Router()
 
@@ -14,7 +14,7 @@ router.route('/auth/sign-out').get(checkToken, signOutUser)
 
 router.use(checkUser)
 
-router.route('/:id').patch(checkBody, updateUser).delete(deleteUser)
+router.route('/:id').patch(containsPartialUser, updateUser).delete(deleteUser)
 
 /*
   Base route: /users
