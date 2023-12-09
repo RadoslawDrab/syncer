@@ -1,4 +1,4 @@
-import { User } from './database'
+import { User } from 'shared/types/database'
 
 /**
  * @param {Status} status Response status

@@ -4,7 +4,7 @@ import 'dotenv/config'
 import app from './admin'
 
 import { Status } from 'src/types/server'
-import { User as DBUser } from 'src/types/database'
+import { User as DBUser } from 'shared/types/database'
 
 const auth = getAuth()
 
