@@ -3,9 +3,14 @@ import { Request, Response, NextFunction } from 'express'
 import { setError } from 'utils'
 import { KeysType, containsPartialType, containsType } from '.'
 
-import { RequestBody } from 'types/server'
+import { User } from 'shared/types/database'
 
-const userKeys: KeysType<RequestBody> = {
+const userKeys: KeysType<
+	User & {
+		displayName: string
+		email: string
+	}
+> = {
 	mandatory: ['songIds', 'playlistIds', 'displayName', 'email']
 }
 

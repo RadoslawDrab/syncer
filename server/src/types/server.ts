@@ -20,10 +20,5 @@ export interface Status {
 	code: number
 	message: string
 }
-export interface RequestBody {
-	user: Partial<{
-		displayName: string
-		email: string
-	}>
-	userData: Partial<User>
-}
+
+
