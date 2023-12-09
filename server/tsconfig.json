@@ -12,7 +12,8 @@
 			"controllers/*": ["./src/controllers/*"],
 			"routers/*": ["./src/routers/*"],
 			"middleware/*": ["./src/middleware/*"],
-			"types/*": ["./src/types/*"]
+			"types/*": ["./src/types/*"],
+			"shared/*": ["../shared/*"]
 		}
 	},
 	"exclude": ["node_modules/"]
