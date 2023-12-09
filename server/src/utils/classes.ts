@@ -34,6 +34,7 @@ export class Endpoint<Type extends { id: string }> {
 				},
 				data
 			)
+			return
 		} catch (error) {
 			setError(res, { code: error.code ?? 500, message: error.message || 'Internal server error' })
 		}
@@ -43,12 +44,18 @@ export class Endpoint<Type extends { id: string }> {
 		try {
 			const data = await this._readData<ObjectKeys<T>>()
 			const singleData = findObject(data, (value) => value.id === req.params.id)
-
-			setStatus(res, { code: 200, message: `${this.name} retrieved` }, singleData)
+			if(!singleData) {
+				setError(res, {
+					code: 400,
+					message: 'Invalid identifier'
+				})
+				return
+			}
+			setStatus(res, { code: 200, message: `${this.name} retrieved` }, this._getCallback(singleData, req))
 		} catch (error) {
 			setError(res, { code: error.code ?? 500, message: error.message })
 		}
-		next()
+		return
 	}
 	async add<Unmodified extends { id: string } = Type, Modified extends { id: string } = Unmodified>(
 		req: Request,
@@ -73,7 +80,7 @@ export class Endpoint<Type extends { id: string }> {
 		} catch (error) {
 			setError(res, { code: error.code ?? 500, message: error.message || 'Internal server error' })
 		}
-		next()
+		return
 	}
 	async update<T extends { id: string } = Type>(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
@@ -103,7 +110,7 @@ export class Endpoint<Type extends { id: string }> {
 		} catch (error) {
 			setError(res, { code: error.code ?? 500, message: error.message || 'Internal server error' })
 		}
-		next()
+		return
 	}
 	async delete<T extends { id: string } = Type>(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
@@ -132,7 +139,12 @@ export class Endpoint<Type extends { id: string }> {
 		} catch (error) {
 			setError(res, { code: error.code ?? 500, message: error.message || 'Internal server error' })
 		}
-		next()
+		return
+	}
+	setGetCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+		callback: (data: Unmodified, req: Request) => Modified
+	) {
+		this._getCallback<Unmodified, Modified> = callback
 	}
 	setAddCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
 		callback: (data: Unmodified, req: Request) => Modified
@@ -144,7 +156,7 @@ export class Endpoint<Type extends { id: string }> {
 	) {
 		this._updateCallback<Unmodified, Modified> = callback
 	}
-	setUpdateBodyCallback<Unmodified extends object = Type, Modified extends object = Unmodified, Body extends object = Type>(
+	setUpdateBodyCallback<Unmodified extends object = Type, Modified extends object = Unmodified, Body extends object = Partial<Type>>(
 		callback: (data: Unmodified, body: Body, req: Request) => Modified
 	) {
 		this._updateBodyCallback<Unmodified, Modified, Body> = callback
@@ -155,6 +167,12 @@ export class Endpoint<Type extends { id: string }> {
 		this._deleteCallback<Unmodified, Modified> = callback
 	}
 
+	private _getCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+		data: Unmodified,
+		req: Request
+	): Modified | Unmodified {
+		return data
+	}
 	private _addCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
 		data: Unmodified,
 		req: Request
