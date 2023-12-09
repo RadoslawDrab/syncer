@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { getAuth } from 'firebase/auth'
 
-import { setError } from 'src/utils'
-import app, { getData } from 'src/config/firebase'
+import { setError } from 'utils'
+import app, { getData } from 'config/firebase'
 
 const auth = getAuth(app)
 
@@ -66,7 +66,7 @@ export function checkBody(req: Request, res: Response, next: NextFunction) {
 	next()
 }
 
-type Keys<T> = (keyof T)[]
+type Keys<T> = (keyof T | string)[]
 export interface KeysType<T> {
 	mandatory: Keys<T>
 	optional?: Keys<T>

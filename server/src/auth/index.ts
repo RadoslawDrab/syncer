@@ -3,7 +3,7 @@ import 'dotenv/config'
 
 import app from './admin'
 
-import { Status } from 'src/types/server'
+import { Status } from 'types/server'
 import { User as DBUser } from 'shared/types/database'
 
 const auth = getAuth()
@@ -43,6 +43,7 @@ export function getUser(token: string): Promise<User> {
 			// Creates user in database if they don't exists
 			if (!(await userRef.get()).exists()) {
 				const dbUser: DBUser = {
+					id: '0',
 					songIds: ['0'],
 					playlistIds: ['0']
 				}

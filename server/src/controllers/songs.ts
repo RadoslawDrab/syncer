@@ -1,7 +1,7 @@
 import { v4 } from 'uuid'
 
 import { FullSong, Song, SongItem } from 'shared/types/database'
-import { Endpoint } from 'src/utils/classes'
+import { Endpoint } from 'utils/classes'
 
 const endpoint = new Endpoint<FullSong>('/songs', 'Song')
 endpoint.setAddCallback<FullSong, SongItem>((data, req) => {

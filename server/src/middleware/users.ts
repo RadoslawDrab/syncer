@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { setError } from 'src/utils'
+import { setError } from 'utils'
 
-import { RequestBody } from 'src/types/server'
+import { RequestBody } from 'types/server'
 
 export function checkBody(req: Request, res: Response, next: NextFunction) {
 	const body: RequestBody | undefined = req.body

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { setError, setStatus } from '.'
 
-import { getData, setData } from 'src/config/firebase'
+import { getData, setData } from 'config/firebase'
 import { filterObject, findObject } from 'shared/utils'
 import { ObjectKeys } from 'shared/types/global'
 
@@ -107,8 +107,9 @@ export class Endpoint<Type extends { id: string }> {
 	}
 	async delete<T extends { id: string } = Type>(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const data = await this._readData<{ [key: string]: T }>()
+			const data = await this._readData<ObjectKeys<T>>()
 			const dataId = req.params.id
+			this._deleteCallback(data, req)
 			if (!dataId) {
 				setError(res, {
 					code: 400,
@@ -148,6 +149,11 @@ export class Endpoint<Type extends { id: string }> {
 	) {
 		this._updateBodyCallback<Unmodified, Modified, Body> = callback
 	}
+	setDeleteCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+		callback: (data: Unmodified, req: Request) => Modified
+	) {
+		this._deleteCallback<Unmodified, Modified> = callback
+	}
 
 	private _addCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
 		data: Unmodified,
@@ -156,6 +162,12 @@ export class Endpoint<Type extends { id: string }> {
 		return data
 	}
 	private _updateCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+		data: Unmodified,
+		req: Request
+	): Modified | Unmodified {
+		return data
+	}
+	private _deleteCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
 		data: Unmodified,
 		req: Request
 	): Modified | Unmodified {

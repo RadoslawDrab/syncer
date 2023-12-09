@@ -11,7 +11,7 @@ const aliases = Object.keys(paths).reduce((obj, pathKey) => {
 
 	const path = paths[pathKey][0].replace(starRegex, '').replace(currentPathRegex, '')
 
-	const resolvePath = `${basePath}/${path}/`
+	const resolvePath = (basePath ? `${basePath}/` : '') + `${path}/`
 	return { ...obj, [alias]: `${__dirname}/${resolvePath}` }
 }, {})
 

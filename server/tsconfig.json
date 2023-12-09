@@ -6,14 +6,16 @@
 		"exactOptionalPropertyTypes": true,
 		"noImplicitAny": true,
 		"noUncheckedIndexedAccess": true,
-		"baseUrl": "./",
+		"baseUrl": "src/",
 		"paths": {
-			"src/*": ["./src/*"],
-			"controllers/*": ["./src/controllers/*"],
-			"routers/*": ["./src/routers/*"],
-			"middleware/*": ["./src/middleware/*"],
-			"types/*": ["./src/types/*"],
-			"shared/*": ["../shared/*"]
+			"controllers/*": ["./controllers/*"],
+			"routers/*": ["./routers/*"],
+			"middleware/*": ["./middleware/*"],
+			"types/*": ["./types/*"],
+			"shared/*": ["../../shared/*"],
+			"utils/*": ["./utils/*"],
+			"config/*": ["./config/*"],
+			"auth/*": ["./auth/*"]
 		}
 	},
 	"exclude": ["node_modules/"]

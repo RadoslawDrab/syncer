@@ -1,8 +1,8 @@
 import { User, getAuth, signOut, updateCurrentUser } from 'firebase/auth'
 import { Response, Request } from 'express'
 
-import { getUser as getFirebaseUser, getJwtToken } from 'src/auth'
-import { setError, setStatus } from 'src/utils'
+import { getUser as getFirebaseUser, getJwtToken } from 'auth/index'
+import { setError, setStatus } from 'utils'
 import { removeData, updateData } from 'src/config/firebase'
 
 import { RequestBody } from 'src/types/server'

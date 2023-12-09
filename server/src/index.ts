@@ -2,7 +2,7 @@ import express from 'express'
 import { initializeApp } from '@firebase/app'
 import cors from 'cors'
 
-import { config } from 'src/config/firebase'
+import { config } from 'config/firebase'
 import userRouter from 'routers/users'
 import songsRouter from 'routers/songs'
 import playlistsRouter from 'routers/playlists'
