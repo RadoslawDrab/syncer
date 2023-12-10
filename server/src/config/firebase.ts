@@ -1,11 +1,14 @@
 import { FirebaseOptions, initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 import { getDatabase, ref, get, child, remove, update, set } from 'firebase/database'
 const firebaseConfig = require('../../../firebase') as FirebaseOptions
 
 export const config = firebaseConfig
 const app = initializeApp(firebaseConfig)
 export default app
+export const auth = getAuth(app)
 export const dbRef = ref(getDatabase(app, 'https://syncer-d8d4f-default-rtdb.europe-west1.firebasedatabase.app'))
+
 export async function removeData(path: string = '/') {
 	return await remove(child(dbRef, path))
 }
