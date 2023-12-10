@@ -1,14 +1,13 @@
-import { getAuth, signOut } from 'firebase/auth'
+import { signOut } from 'firebase/auth'
 import { Response, Request } from 'express'
 
 import { getUser as getFirebaseUser, getJwtToken } from 'auth/index'
-import app from 'auth/admin'
+import admin from 'auth/admin'
 import { setError, setStatus } from 'utils'
 import { Endpoint } from 'utils/classes'
+import { auth } from 'config/firebase'
 
 import { FullUser as DBFullUser } from 'shared/types/database'
-
-const auth = getAuth()
 
 const endpoint = new Endpoint<DBFullUser>('users/', 'User')
 
@@ -20,7 +19,7 @@ endpoint.setUpdateBodyCallback(async (data, body, req) => {
 	return body
 })
 endpoint.setGetCallback(async (data) => {
-	const user = await app.auth().getUser(data.id)
+	const user = await admin.auth().getUser(data.id)
 
 	return {
 		...data,
@@ -58,6 +57,7 @@ export async function signInUser(req: Request, res: Response) {
 	try {
 		const jwtToken = isIdToken ? await getJwtToken(token) : token
 		const user = await getFirebaseUser(jwtToken)
+		auth.updateCurrentUser(user)
 		setStatus(
 			res,
 			{
