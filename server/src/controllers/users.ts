@@ -1,7 +1,8 @@
-import { User, getAuth, signOut, updateCurrentUser } from 'firebase/auth'
+import { getAuth, signOut } from 'firebase/auth'
 import { Response, Request } from 'express'
 
 import { getUser as getFirebaseUser, getJwtToken } from 'auth/index'
+import app from 'auth/admin'
 import { setError, setStatus } from 'utils'
 import { Endpoint } from 'utils/classes'
 
@@ -11,16 +12,29 @@ const auth = getAuth()
 
 const endpoint = new Endpoint<DBFullUser>('users/', 'User')
 
-endpoint.setUpdateBodyCallback((data, body, req) => {
+endpoint.setUpdateBodyCallback(async (data, body, req) => {
 	if (!req.headers['dev-mode']) {
-		const user = auth.currentUser as User
-		updateCurrentUser(auth, { ...user, ...req.body })
+		const user = auth.currentUser
+		if (user) auth.updateCurrentUser({ ...user, ...req.body })
 	}
 	return body
 })
-endpoint.setDeleteCallback(async (data) => {
-	const user = auth.currentUser
-	await user?.delete()
+endpoint.setGetCallback(async (data) => {
+	const user = await app.auth().getUser(data.id)
+
+	return {
+		...data,
+		displayName: user.displayName,
+		photoURL: user.photoURL,
+		emailVerified: user.emailVerified,
+		metadata: user.metadata
+	}
+})
+endpoint.setDeleteCallback(async (data, req) => {
+	if (!req.headers['dev-mode']) {
+		const user = auth.currentUser
+		await user?.delete()
+	}
 	return data
 })
 
