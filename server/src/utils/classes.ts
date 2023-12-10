@@ -138,7 +138,6 @@ export class Endpoint<Type extends { id: string }> {
 				return
 			}
 			const body = await this._updateBodyCallback(foundData, req.body, req)
-			console.log(foundData, body)
 			const singleData = await this._updateCallback({ ...foundData, ...body }, req)
 
 			this._writeData({ ...data, [foundData.id]: singleData })
