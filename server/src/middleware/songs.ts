@@ -13,9 +13,13 @@ const songKeys: KeysType<Song> = {
 		'genres',
 		'isExplicit',
 		'youtubeUrl',
-		'lyricOffset',
+		'lyricsOffset',
 		'trimStart',
-		'trimEnd'
+		'trimEnd',
+		'time',
+		'trackCount',
+		'trackNumber',
+		'artworkUrl'
 	],
 	optional: ['lyrics']
 }
