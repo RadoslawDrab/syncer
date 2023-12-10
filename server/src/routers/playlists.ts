@@ -1,16 +1,18 @@
 import { Router } from 'express'
 
 import { addPlaylist, deletePlaylist, getPlaylist, getPlaylists, updatePlaylist } from 'controllers/playlists'
-import { checkUser } from 'middleware/index'
+import { checkBody, checkId, checkUser } from 'middleware/index'
+import { containsPartialPlaylist, containsPlaylist } from 'middleware/playlists'
 
 const router = Router()
 
-router.route('/').get(getPlaylists).post(addPlaylist)
-router.route('/:id').get(getPlaylist)
+router.route('/').get(getPlaylists).post(checkBody, containsPlaylist, addPlaylist)
+router.route('/:id').get(checkId, getPlaylist)
 
-router.use(checkUser)
-
-router.route('/:id').patch(updatePlaylist).delete(deletePlaylist)
+router
+	.route('/:id')
+	.patch(checkId, checkUser, checkBody, containsPartialPlaylist, updatePlaylist)
+	.delete(checkId, checkUser, deletePlaylist)
 
 /*
   Base route: /playlists

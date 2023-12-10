@@ -1,17 +1,20 @@
-import { Response, Request } from 'express'
+import { v4 } from 'uuid'
 
-export function getPlaylists(req: Request, res: Response) {
-	res.status(200).json({ status: 'playlists' })
-}
-export function getPlaylist(req: Request, res: Response) {
-	res.status(200).json({ status: 'playlist' })
-}
-export function addPlaylist(req: Request, res: Response) {
-	res.status(200).json({ status: 'added' })
-}
-export function updatePlaylist(req: Request, res: Response) {
-	res.status(200).json({ status: 'updated' })
-}
-export function deletePlaylist(req: Request, res: Response) {
-	res.status(200).json({ status: 'deleted' })
-}
+import { Endpoint } from 'utils/classes'
+
+import { Playlist } from 'shared/types/database'
+
+const endpoint = new Endpoint<Playlist>('playlists/', 'Playlist')
+
+endpoint.setAddCallback<Playlist, Playlist>(async (data) => {
+	return { ...data, id: v4(), createdAt: Date.now(), updatedAt: Date.now() }
+})
+endpoint.setUpdateCallback<Playlist, Playlist>(async (data) => {
+	return { ...data, updatedAt: Date.now() }
+})
+
+export const getPlaylists = endpoint.getAll
+export const getPlaylist = endpoint.getSingle
+export const addPlaylist = endpoint.add
+export const updatePlaylist = endpoint.update
+export const deletePlaylist = endpoint.delete
