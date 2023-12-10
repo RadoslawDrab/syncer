@@ -2,7 +2,7 @@ import { Router } from 'express'
 
 import { addPlaylist, deletePlaylist, getPlaylist, getPlaylists, updatePlaylist } from 'controllers/playlists'
 import { checkBody, checkId, checkUser } from 'middleware/index'
-import { containsPartialPlaylist, containsPlaylist } from 'middleware/playlists'
+import { checkPlaylistCreator, containsPartialPlaylist, containsPlaylist } from 'middleware/playlists'
 
 const router = Router()
 
@@ -11,8 +11,8 @@ router.route('/:id').get(checkId, getPlaylist)
 
 router
 	.route('/:id')
-	.patch(checkId, checkUser, checkBody, containsPartialPlaylist, updatePlaylist)
-	.delete(checkId, checkUser, deletePlaylist)
+	.patch(checkId, checkUser, checkPlaylistCreator, checkBody, containsPartialPlaylist, updatePlaylist)
+	.delete(checkId, checkUser, checkPlaylistCreator, deletePlaylist)
 
 /*
   Base route: /playlists

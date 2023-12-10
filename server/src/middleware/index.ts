@@ -3,34 +3,42 @@ import { NextFunction, Request, Response } from 'express'
 import { setError } from 'utils'
 import { auth, getData } from 'config/firebase'
 
-import { SongItem } from 'shared/types/database'
+type Path = 'songs' | 'users' | 'playlists'
 
 /** Checks whether current user's id is the same as creator's id */
-export async function checkSong(req: Request, res: Response, next: NextFunction) {
+export async function checkCreator<T extends { userId: string }>(req: Request, res: Response, next: NextFunction): Promise<void> {
 	if (req.headers['dev-mode']) return next()
+	try {
+		const type: Path = this
 
-	const songSnapshot = await getData(`songs/${req.params.id}`)
-	if (!songSnapshot.exists()) {
+		const snapshot = await getData(`${type}/${req.params.id}`)
+		if (!snapshot.exists()) {
+			setError(res, {
+				code: 400,
+				message: 'Invalid identifier'
+			})
+			return
+		}
+		const currentUser = auth.currentUser
+
+		// Check user's id and creator's id
+		const val: T = snapshot.val()
+		if (val.userId !== currentUser?.uid) {
+			setError(res, {
+				code: 403,
+				message: 'Current user is not the creator'
+			})
+			return
+		}
+	} catch (error) {
 		setError(res, {
-			code: 400,
-			message: 'Invalid identifier'
+			code: error.code || 500,
+			message: error.message || 'Internal server error'
 		})
-		return
 	}
-	const currentUser = auth.currentUser
-
-	// Check user's id and creator's id
-	const song: SongItem = songSnapshot.val()
-	if (song.userId !== currentUser?.uid) {
-		setError(res, {
-			code: 403,
-			message: 'Current user is not the creator'
-		})
-		return
-	}
-
 	next()
 }
+export type CheckCreatorHandler = typeof checkCreator
 
 export async function checkUser(req: Request, res: Response, next: NextFunction) {
 	if (req.headers['dev-mode']) return next()
@@ -96,18 +104,18 @@ export interface KeysType<T> {
 export function containsType<T>(req: Request, res: Response, next: NextFunction) {
 	const { mandatory }: KeysType<T> = this
 
-	let isValid = true
+	let unknownProperty: any = ''
 
 	mandatory.forEach((key) => {
 		if (req.body[key] === undefined) {
-			isValid = false
+			unknownProperty = key
 		}
 	})
 
-	if (!isValid) {
+	if (unknownProperty) {
 		setError(res, {
 			code: 400,
-			message: `Invalid body. Body must contain "${mandatory.join(', ')}"`
+			message: `Invalid body. Unknown property: "${unknownProperty}". Body must contain "${mandatory.join(', ')}"`
 		})
 		return
 	}

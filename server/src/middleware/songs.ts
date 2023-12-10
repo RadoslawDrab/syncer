@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { KeysType, containsPartialType, containsType } from '.'
+import { CheckCreatorHandler, KeysType, checkCreator, containsPartialType, containsType } from '.'
 
 import { Song } from 'shared/types/database'
 
@@ -26,3 +26,5 @@ export function containsSong(req: Request, res: Response, next: NextFunction) {
 export function containsPartialSong(req: Request, res: Response, next: NextFunction) {
 	containsPartialType.call(songKeys, req, res, next)
 }
+
+export const checkSongsCreator: CheckCreatorHandler = checkCreator.bind('songs')
