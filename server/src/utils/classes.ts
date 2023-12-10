@@ -35,16 +35,31 @@ export class Endpoint<Type extends { id: string }> {
 				)
 
 				// Checks if all keys match
+				/* 
+				Eg. 
+				Searches based on 1 prop
+				www.domain.com/path?prop1=Test
+				
+				Searches based on 2 props. Both props have to be present on an object
+				www.domain.com/path?prop1=Test&prop2=Hello
+				
+				Searches based on 2 props. Both props have to be present on an object, but `prop2` can have 'Hello' or 'World' as a value
+				www.domain.com/path?prop1=Test&prop2=Hello;World
+				*/
 				return !keys
 					.reduce((acc, key: keyof typeof props) => {
 						const prop = props[key],
 							query = queries[key]
 
-						// Checks if `prop` and `query` variables are arrays. If so compares if all of items in them are the same. Order doesn't matter
+						// Checks if `prop` and `query` variables are arrays. If so compares if all of items in them are the same. Order doesn't matter. Acts as AND
 						if (Array.isArray(prop) && Array.isArray(query)) {
 							return [...acc, compareArrays(query, prop)]
 						}
-
+						// Checks if `queryValues` has more than 1 item and compares `prop` (converted to array) and `queryValues`. Acts as OR
+						const queryValues = query?.toString().split(';')
+						if (queryValues && queryValues?.length > 1) {
+							return [...acc, compareArrays(queryValues, Array.isArray(prop) ? prop : Array(prop), 'any')]
+						}
 						return [
 							...acc,
 							// Checks if current object contains any key with same value as query
@@ -123,9 +138,10 @@ export class Endpoint<Type extends { id: string }> {
 				return
 			}
 			const body = await this._updateBodyCallback(foundData, req.body, req)
-			const singleData = this._updateCallback({ ...foundData, ...body }, req)
+			console.log(foundData, body)
+			const singleData = await this._updateCallback({ ...foundData, ...body }, req)
 
-			this._writeData.call(this, { ...data, [foundData.id]: singleData })
+			this._writeData({ ...data, [foundData.id]: singleData })
 
 			setStatus(
 				res,
@@ -180,22 +196,20 @@ export class Endpoint<Type extends { id: string }> {
 	) {
 		this._getAllCallback<Unmodified, Modified> = callback
 	}
-	setAddCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
+	setAddCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
 		callback: (data: Unmodified, req: Request) => Promise<Modified>
 	) {
 		this._addCallback<Unmodified, Modified> = callback
 	}
-	setUpdateCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
+	setUpdateCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
 		callback: (data: Unmodified, req: Request) => Promise<Modified>
 	) {
 		this._updateCallback<Unmodified, Modified> = callback
 	}
-	setUpdateBodyCallback<
-		Unmodified extends object = ObjectKeys<Type>,
-		Modified extends object = Unmodified,
-		Body extends object = Partial<Type>
-	>(callback: (data: Unmodified, body: Body, req: Request) => Promise<Modified>) {
-		this._updateBodyCallback<Unmodified, Modified, Body> = callback
+	setUpdateBodyCallback<Unmodified extends object = Type, Modified extends object = Partial<Type>>(
+		callback: (data: Unmodified, body: Modified, req: Request) => Promise<Unmodified | Modified>
+	) {
+		this._updateBodyCallback<Unmodified, Modified> = callback
 	}
 	setDeleteCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
 		callback: (data: Unmodified, req: Request) => Promise<Modified>
@@ -221,7 +235,7 @@ export class Endpoint<Type extends { id: string }> {
 	): Promise<Modified | Unmodified> {
 		return data
 	}
-	private async _updateCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
+	private async _updateCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
 		data: Unmodified,
 		req: Request
 	): Promise<Modified | Unmodified> {
@@ -233,12 +247,12 @@ export class Endpoint<Type extends { id: string }> {
 	): Promise<Modified | Unmodified> {
 		return data
 	}
-	private async _updateBodyCallback<
-		Unmodified extends object = ObjectKeys<Type>,
-		Modified extends object = Unmodified,
-		Body extends object = Type
-	>(data: Unmodified, body: Body, req: Request): Promise<Modified | Unmodified> {
-		return data
+	private async _updateBodyCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+		data: Unmodified,
+		body: Modified,
+		req: Request
+	): Promise<Modified | Unmodified> {
+		return body
 	}
 	private async _readData<T extends object>(): Promise<T> {
 		// Read data
