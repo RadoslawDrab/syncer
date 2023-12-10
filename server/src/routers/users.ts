@@ -12,7 +12,7 @@ router.route('/:id').get(checkId, getUser)
 router.route('/auth/sign-in').get(checkToken, signInUser)
 router.route('/auth/sign-out').get(signOutUser)
 
-router.route('/:id').patch(checkId, checkUser, containsPartialUser, updateUser).delete(checkId, checkUser, deleteUser)
+router.route('/:id').delete(checkId, checkUser, deleteUser)
 
 /*
   Base route: /users
