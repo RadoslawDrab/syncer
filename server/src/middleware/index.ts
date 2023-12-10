@@ -1,22 +1,40 @@
 import { NextFunction, Request, Response } from 'express'
-import { getAuth } from 'firebase/auth'
 
 import { setError } from 'utils'
-import app, { getData } from 'config/firebase'
+import { auth, getData } from 'config/firebase'
 
-const auth = getAuth(app)
+import { SongItem } from 'shared/types/database'
 
 /** Checks whether current user's id is the same as creator's id */
-export function checkSong(req: Request, res: Response, next: NextFunction) {
+export async function checkSong(req: Request, res: Response, next: NextFunction) {
+	if (req.headers['dev-mode']) return next()
+
+	const songSnapshot = await getData(`songs/${req.params.id}`)
+	if (!songSnapshot.exists()) {
+		setError(res, {
+			code: 400,
+			message: 'Invalid identifier'
+		})
+		return
+	}
+	const currentUser = auth.currentUser
+
 	// Check user's id and creator's id
+	const song: SongItem = songSnapshot.val()
+	if (song.userId !== currentUser?.uid) {
+		setError(res, {
+			code: 403,
+			message: 'Current user is not the creator'
+		})
+		return
+	}
 
 	next()
 }
 
 export async function checkUser(req: Request, res: Response, next: NextFunction) {
-	const devMode = Boolean(req.headers['dev-mode'])
-	if (devMode) return next()
-	
+	if (req.headers['dev-mode']) return next()
+
 	// Check user's auth
 
 	const currentUser = auth.currentUser
