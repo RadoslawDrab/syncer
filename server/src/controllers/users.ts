@@ -31,7 +31,7 @@ export const deleteUser = endpoint.delete
 
 export async function signInUser(req: Request, res: Response) {
 	const token = req.headers.token
-	const isIdToken = Boolean(req.headers['is-id-token'])
+	const isIdToken = req.headers['is-id-token'] === 'true'
 
 	if (typeof token !== 'string') {
 		setError(res, {
