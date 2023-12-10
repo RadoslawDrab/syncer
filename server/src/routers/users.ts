@@ -10,7 +10,7 @@ router.route('/').get(getUsers)
 router.route('/:id').get(getUser)
 
 router.route('/auth/sign-in').get(checkToken, signInUser)
-router.route('/auth/sign-out').get(checkToken, signOutUser)
+router.route('/auth/sign-out').get(signOutUser)
 
 router.use(checkUser)
 
