@@ -11,7 +11,7 @@ const userKeys: KeysType<
 		email: string
 	}
 > = {
-	mandatory: ['songIds', 'playlistIds', 'displayName', 'email']
+	mandatory: ['displayName', 'email']
 }
 
 export function containsUser(req: Request, res: Response, next: NextFunction) {
