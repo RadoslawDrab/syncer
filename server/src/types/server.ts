@@ -1,5 +1,3 @@
-import { User } from 'shared/types/database'
-
 /**
  * @param {Status} status Response status
  * @param {Data} data Data returned in body
@@ -20,5 +18,3 @@ export interface Status {
 	code: number
 	message: string
 }
-
-

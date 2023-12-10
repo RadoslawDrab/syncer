@@ -4,16 +4,10 @@
 export interface FullUser extends User {
 	id: string
 }
+
 /**
- * @param {string[]} songs user's created songs
- * @param {Playlist} playlists user's created playlists
  */
-export interface User {
-	/** user's songs */
-	songIds: string[]
-	/** user's playlists */
-	playlistIds: string[]
-}
+export interface User {}
 
 /**
  * @param {string} id Songs item id
@@ -32,17 +26,11 @@ export interface SongItem {
 	/** Creator's id */
 	userId: string
 	/** Song object */
-	song: FullSong
+	song: Song
 }
 
 /**
  * @param {string} id iTunes song identifier
- */
-export interface FullSong extends Song {
-	/** iTunes song identifier */
-	id: string
-}
-/**
  * @param {string} name Song's name
  * @param {string} artist Artist name
  * @param {string} album Album name
@@ -51,11 +39,13 @@ export interface FullSong extends Song {
  * @param {boolean} isExplicit Song's explicitness
  * @param {string} lyrics String containing lyrics in SRT format
  * @param {string} youtubeUrl Song's YouTube URL
- * @param {number} lyricOffset Offset of synchronised lyrics
+ * @param {number} lyricsOffset Offset of synchronised lyrics
  * @param {number} trimStart Song start trim
  * @param {number} trimEnd Song end trim
  */
 export interface Song {
+	/** iTunes song identifier */
+	itunesId: string
 	name: string
 	artist: string
 	album: string
