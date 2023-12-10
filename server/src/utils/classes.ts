@@ -10,16 +10,17 @@ export class Endpoint<Type extends { id: string }> {
 	name: string
 
 	private _path: string
+	private _returnAsArray: boolean
 
-	constructor(path: string, name: string) {
+	constructor(path: string, name: string, returnAsArray: boolean = true) {
 		this._path = path
+		this._returnAsArray = returnAsArray
 		this.name = name[0]?.toUpperCase() + name.slice(1)
 		this.getAll = this.getAll.bind(this)
 		this.getSingle = this.getSingle.bind(this)
 		this.add = this.add.bind(this)
 		this.update = this.update.bind(this)
 		this.delete = this.delete.bind(this)
-		this._addCallback = this._addCallback.bind(this)
 	}
 
 	async getAll<T extends object = Type>(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -59,7 +60,7 @@ export class Endpoint<Type extends { id: string }> {
 					code: 200,
 					message: `${this.name}s retrieved`
 				},
-				data
+				await this._getAllCallback(this._returnAsArray ? objectToArray(filtered) : filtered, req)
 			)
 			return
 		} catch (error) {
@@ -71,14 +72,14 @@ export class Endpoint<Type extends { id: string }> {
 		try {
 			const data = await this._readData<ObjectKeys<T>>()
 			const singleData = findObject(data, (value) => value.id === req.params.id)
-			if(!singleData) {
+			if (!singleData) {
 				setError(res, {
 					code: 400,
 					message: 'Invalid identifier'
 				})
 				return
 			}
-			setStatus(res, { code: 200, message: `${this.name} retrieved` }, this._getCallback(singleData, req))
+			setStatus(res, { code: 200, message: `${this.name} retrieved` }, await this._getCallback(singleData, req))
 		} catch (error) {
 			setError(res, { code: error.code ?? 500, message: error.message })
 		}
@@ -91,7 +92,7 @@ export class Endpoint<Type extends { id: string }> {
 	): Promise<void> {
 		const bodyData: Unmodified = req.body
 
-		const modifiedData = this._addCallback<Unmodified, Modified>(bodyData, req)
+		const modifiedData = await this._addCallback<Unmodified, Modified>(bodyData, req)
 		try {
 			const data = await this._readData<ObjectKeys<typeof modifiedData>>()
 			await this._writeData({ ...data, [modifiedData.id]: modifiedData })
@@ -121,7 +122,7 @@ export class Endpoint<Type extends { id: string }> {
 				})
 				return
 			}
-			const body = this._updateBodyCallback(foundData, req.body, req)
+			const body = await this._updateBodyCallback(foundData, req.body, req)
 			const singleData = this._updateCallback({ ...foundData, ...body }, req)
 
 			this._writeData.call(this, { ...data, [foundData.id]: singleData })
@@ -143,7 +144,7 @@ export class Endpoint<Type extends { id: string }> {
 		try {
 			const data = await this._readData<ObjectKeys<T>>()
 			const dataId = req.params.id
-			this._deleteCallback(data, req)
+			await this._deleteCallback(data, req)
 			if (!dataId) {
 				setError(res, {
 					code: 400,
@@ -168,61 +169,75 @@ export class Endpoint<Type extends { id: string }> {
 		}
 		return
 	}
+
 	setGetCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
-		callback: (data: Unmodified, req: Request) => Modified
+		callback: (data: Unmodified, req: Request) => Promise<Modified>
 	) {
 		this._getCallback<Unmodified, Modified> = callback
 	}
-	setAddCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
-		callback: (data: Unmodified, req: Request) => Modified
+	setGetAllCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
+		callback: (data: Unmodified, req: Request) => Promise<Modified>
+	) {
+		this._getAllCallback<Unmodified, Modified> = callback
+	}
+	setAddCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
+		callback: (data: Unmodified, req: Request) => Promise<Modified>
 	) {
 		this._addCallback<Unmodified, Modified> = callback
 	}
-	setUpdateCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
-		callback: (data: Unmodified, req: Request) => Modified
+	setUpdateCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
+		callback: (data: Unmodified, req: Request) => Promise<Modified>
 	) {
 		this._updateCallback<Unmodified, Modified> = callback
 	}
-	setUpdateBodyCallback<Unmodified extends object = Type, Modified extends object = Unmodified, Body extends object = Partial<Type>>(
-		callback: (data: Unmodified, body: Body, req: Request) => Modified
-	) {
+	setUpdateBodyCallback<
+		Unmodified extends object = ObjectKeys<Type>,
+		Modified extends object = Unmodified,
+		Body extends object = Partial<Type>
+	>(callback: (data: Unmodified, body: Body, req: Request) => Promise<Modified>) {
 		this._updateBodyCallback<Unmodified, Modified, Body> = callback
 	}
-	setDeleteCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
-		callback: (data: Unmodified, req: Request) => Modified
+	setDeleteCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
+		callback: (data: Unmodified, req: Request) => Promise<Modified>
 	) {
 		this._deleteCallback<Unmodified, Modified> = callback
 	}
 
-	private _getCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+	private async _getCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
 		data: Unmodified,
 		req: Request
-	): Modified | Unmodified {
+	): Promise<Modified | Unmodified> {
 		return data
 	}
-	private _addCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+	private async _getAllCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
 		data: Unmodified,
 		req: Request
-	): Modified | Unmodified {
+	): Promise<Modified | Unmodified> {
 		return data
 	}
-	private _updateCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+	private async _addCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
 		data: Unmodified,
 		req: Request
-	): Modified | Unmodified {
+	): Promise<Modified | Unmodified> {
 		return data
 	}
-	private _deleteCallback<Unmodified extends object = Type, Modified extends object = Unmodified>(
+	private async _updateCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
 		data: Unmodified,
 		req: Request
-	): Modified | Unmodified {
+	): Promise<Modified | Unmodified> {
 		return data
 	}
-	private _updateBodyCallback<Unmodified extends object = Type, Modified extends object = Unmodified, Body extends object = Type>(
+	private async _deleteCallback<Unmodified extends object = ObjectKeys<Type>, Modified extends object = Unmodified>(
 		data: Unmodified,
-		body: Body,
 		req: Request
-	): Modified | Unmodified {
+	): Promise<Modified | Unmodified> {
+		return data
+	}
+	private async _updateBodyCallback<
+		Unmodified extends object = ObjectKeys<Type>,
+		Modified extends object = Unmodified,
+		Body extends object = Type
+	>(data: Unmodified, body: Body, req: Request): Promise<Modified | Unmodified> {
 		return data
 	}
 	private async _readData<T extends object>(): Promise<T> {
