@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { setError, setStatus } from '.'
 
 import { getData, setData } from 'config/firebase'
-import { filterObject, findObject } from 'shared/utils'
+import { compareArrays, filterObject, findObject, flattenObject, objectToArray } from 'shared/utils'
 import { ObjectKeys } from 'shared/types/global'
 
 export class Endpoint<Type extends { id: string }> {
@@ -25,6 +25,33 @@ export class Endpoint<Type extends { id: string }> {
 	async getAll<T extends object = Type>(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const data = await this._readData<ObjectKeys<T>>()
+			const queries = req.query
+			const filtered = filterObject(data, (value) => {
+				const props = flattenObject(value)
+				// Searches for query keys present in object
+				const keys = Object.keys(queries).filter(
+					(queryKey: keyof typeof queries) => !!Object.keys(props).find((propsKey: keyof typeof props) => propsKey === queryKey)
+				)
+
+				// Checks if all keys match
+				return !keys
+					.reduce((acc, key: keyof typeof props) => {
+						const prop = props[key],
+							query = queries[key]
+
+						// Checks if `prop` and `query` variables are arrays. If so compares if all of items in them are the same. Order doesn't matter
+						if (Array.isArray(prop) && Array.isArray(query)) {
+							return [...acc, compareArrays(query, prop)]
+						}
+
+						return [
+							...acc,
+							// Checks if current object contains any key with same value as query
+							String(prop).toLowerCase().includes(String(query).toLowerCase())
+						]
+					}, [])
+					.some((value) => !value)
+			})
 
 			setStatus(
 				res,
