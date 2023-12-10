@@ -14,7 +14,7 @@ const endpoint = new Endpoint<DBFullUser>('users/', 'User')
 endpoint.setUpdateBodyCallback(async (data, body, req) => {
 	if (!req.headers['dev-mode']) {
 		const user = auth.currentUser
-		if (user) auth.updateCurrentUser({ ...user, ...req.body })
+		if (user) admin.auth().updateUser(data.id, { ...user, ...req.body })
 	}
 	return body
 })
