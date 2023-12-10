@@ -66,6 +66,7 @@ export interface Song {
 }
 
 /**
+ * @param {string} id Playlist id
  * @param {string} name Playlist name
  * @param {number} createdAt Timestamp at which playlist was created
  * @param {number} updatedAt Timestamp at which playlist was updated
@@ -73,6 +74,8 @@ export interface Song {
  * @param {string[]} songIds Song ids added to the playlist
  */
 export interface Playlist {
+	id: string
+	/** Playlist name */
 	name: string
 	/** Timestamp at which playlist was created */
 	createdAt: number
