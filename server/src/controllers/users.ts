@@ -57,7 +57,8 @@ export async function signInUser(req: Request, res: Response) {
 	try {
 		const jwtToken = isIdToken ? await getJwtToken(token) : token
 		const user = await getFirebaseUser(jwtToken)
-		auth.updateCurrentUser(user)
+		await auth.updateCurrentUser(user)
+
 		setStatus(
 			res,
 			{
