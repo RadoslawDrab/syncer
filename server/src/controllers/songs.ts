@@ -1,16 +1,18 @@
 import { v4 } from 'uuid'
 
-import { FullSong, Song, SongItem } from 'shared/types/database'
 import { Endpoint } from 'utils/classes'
 
-const endpoint = new Endpoint<FullSong>('/songs', 'Song')
-endpoint.setAddCallback<FullSong, SongItem>((data, req) => {
+import { Song, SongItem } from 'shared/types/database'
+
+const endpoint = new Endpoint<SongItem>('/songs', 'Song')
+
+endpoint.setAddCallback<Song, SongItem>(async (data, req) => {
 	return { id: v4(), createdAt: Date.now(), updatedAt: Date.now(), userId: req.query.userId?.toString() ?? '', song: data }
 })
-endpoint.setUpdateCallback<SongItem, SongItem>((data) => {
+endpoint.setUpdateCallback<SongItem, SongItem>(async (data) => {
 	return { ...data, updatedAt: Date.now() }
 })
-endpoint.setUpdateBodyCallback<SongItem, SongItem, Partial<Song>>((data, body) => {
+endpoint.setUpdateBodyCallback<SongItem, SongItem, Partial<Song>>(async (data, body) => {
 	return { ...data, song: { ...data.song, ...body } }
 })
 
