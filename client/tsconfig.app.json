@@ -5,9 +5,16 @@
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
-    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "baseUrl": "./src/",
     "paths": {
-      "@/*": ["./src/*"]
+      "shared/*": ["../../shared/*"],
+      "components/*": ["components/*"],
+      "views/*": ["views/*"],
+      "stores/*": ["stores/*"],
+      "router/*": ["router/*"],
+      "utils/*": ["utils/*"],
+      "assets/*": ["assets/*"]
     }
   }
 }
