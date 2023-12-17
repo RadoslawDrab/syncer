@@ -87,7 +87,7 @@ export async function signOutUser(req: Request, res: Response) {
 		)
 	} catch (error) {
 		setError(res, {
-			code: 500,
+			code: error.code || 500,
 			message: error.message || 'Internal server error'
 		})
 	}

@@ -79,7 +79,7 @@ export class Endpoint<Type extends { id: string }> {
 			)
 			return
 		} catch (error) {
-			setError(res, { code: error.code ?? 500, message: error.message || 'Internal server error' })
+			setError(res, { code: error.code || 500, message: error.message || 'Internal server error' })
 		}
 		next()
 	}
@@ -96,7 +96,7 @@ export class Endpoint<Type extends { id: string }> {
 			}
 			setStatus(res, { code: 200, message: `${this.name} retrieved` }, await this._getCallback(singleData, req))
 		} catch (error) {
-			setError(res, { code: error.code ?? 500, message: error.message })
+			setError(res, { code: error.code || 500, message: error.message || 'Internal server error' })
 		}
 		return
 	}
@@ -121,7 +121,7 @@ export class Endpoint<Type extends { id: string }> {
 				null
 			)
 		} catch (error) {
-			setError(res, { code: error.code ?? 500, message: error.message || 'Internal server error' })
+			setError(res, { code: error.code || 500, message: error.message || 'Internal server error' })
 		}
 		return
 	}
@@ -151,7 +151,7 @@ export class Endpoint<Type extends { id: string }> {
 				null
 			)
 		} catch (error) {
-			setError(res, { code: error.code ?? 500, message: error.message || 'Internal server error' })
+			setError(res, { code: error.code || 500, message: error.message || 'Internal server error' })
 		}
 		return
 	}
@@ -180,7 +180,7 @@ export class Endpoint<Type extends { id: string }> {
 				null
 			)
 		} catch (error) {
-			setError(res, { code: error.code ?? 500, message: error.message || 'Internal server error' })
+			setError(res, { code: error.code || 500, message: error.message || 'Internal server error' })
 		}
 		return
 	}
