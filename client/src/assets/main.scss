@@ -2,4 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './components/button.scss'
+@import './utils/mixins.scss';
+
+@import './components/button.scss';
+
+@layer base {
+  body {
+    @apply bg-light dark:bg-dark;
+  }
+}
+
+#app {
+  position: relative;
+}
