@@ -1,3 +1,58 @@
-.button {
-  @apply px-2 py-1 bg-;
+@layer components { 
+  .btn {
+    @apply px-2 py-1 m-1 rounded transition active:scale-95 border-2;
+    @include states(
+      (default: bg-secondary-200 border-secondary-300, hover: bg-secondary-100, active: bg-secondary-100), 
+      (default: bg-secondary-700 border-secondary-800 text-secondary-300, hover: bg-secondary-800, active: bg-secondary-700)
+    );
+
+    @apply outline-2 outline-offset-2 outline-secondary-600 focus-visible:outline;
+
+    @include states(
+      (default: bg-500, hover: bg-600, active: bg-500, focus-visible: outline-700), 
+      (default: bg-600, hover: bg-700, active: bg-600), 
+      true) {
+      @apply border-transparent;
+      @include states(
+        (default: text-secondary-100), 
+        (default: text-secondary-200)
+      );
+    }
+    &-outline {
+      @include states(
+        (default: text-500 border-500, hover: bg-500, active: bg-600 border-600, focus-visible: bg-500), 
+        (hover: border-600 bg-600, active: border-700 bg-700), 
+        true) {
+        @apply bg-transparent hover:text-secondary-100;
+        &:not(.btn-text-inherit) {
+          @include states(
+            (default: text-secondary-900, hover: text-secondary-100, focus-visible: text-secondary-900), 
+            (default: text-secondary-200));
+        }
+      }
+    }
+    &-border {
+      &-top {
+        @apply border-0 border-t-2 rounded-t-none;
+      }
+      &-bottom {
+        @apply border-0 border-b-2 rounded-b-none;
+      }
+      &-left {
+        @apply border-0 border-l-2 rounded-l-none;
+      }
+      &-right {
+        @apply border-0 border-r-2 rounded-r-none;
+      }
+      &-x {
+        @apply border-0 border-x-2 rounded-none;
+      }
+      &-y {
+        @apply border-0 border-y-2 rounded-none;
+      }
+    }
+    &-rect {
+      @apply aspect-square;
+    }
+  }
 }
