@@ -1,0 +1,64 @@
+@use 'sass:string';
+@use 'sass:list';
+@use 'sass:map';
+
+$colors: primary, secondary, success, warning, danger, info;
+
+@mixin generateStyles($styles...) {
+  @each $color in $colors {
+    &-#{$color} {
+      $types: '';
+      @for $i from 1 to list.length($styles) {
+        $style: string.split(list.nth($styles, $i), '-');
+        $type: list.nth($style, 1);
+        $value: list.nth($style, list.length($style));
+        @for $j from 2 to list.length($style) {
+          $type: #{$type}-#{list.nth($style, $j)};
+        }
+
+        $types: #{$types} #{$type}-#{$color}-#{$value};
+      }
+      @apply #{$types};
+      @content;
+    }  
+  }
+}
+@mixin states($light, $dark, $generateStyles: false) {
+  $lightKeys: map.keys($light);
+  $darkKeys: map.keys($dark);
+
+  $lightValues: ();
+  $darkValues: ();
+
+  @each $key in $lightKeys {
+    $values: map.get($light, $key);
+    @each $value in $values {
+      @if $key != default {
+        $lightValues: list.join($lightValues, $key + ':' + $value, space);
+      } 
+      @else {
+        $lightValues: list.join($lightValues, $value, space);
+      }
+    }
+  }
+  @each $key in $darkKeys {
+    $values: map.get($dark, $key);
+    @each $value in $values {
+      @if $key != default {
+        $darkValues: list.join($darkValues, string.unquote('dark:' + $key + ':' + $value), space);
+      } 
+      @else {
+        $darkValues: list.join($darkValues, string.unquote('dark:' + $value), space);
+      }
+    }
+    $values: list.join($lightValues, $darkValues, space);
+    @if $generateStyles {
+      @include generateStyles($values...) {
+        @content;
+      }
+    } 
+    @else {
+      @apply #{$values};
+    }
+  }
+}
