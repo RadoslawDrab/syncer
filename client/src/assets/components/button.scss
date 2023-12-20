@@ -31,6 +31,11 @@
         }
       }
     }
+    &-transparent {
+      @include generateStyles("text-500") {
+        @apply bg-transparent border-transparent;
+      }
+    }
     &-border {
       &-top {
         @apply border-0 border-t-2 rounded-t-none;
