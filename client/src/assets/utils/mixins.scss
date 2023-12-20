@@ -7,18 +7,20 @@ $colors: primary, secondary, success, warning, danger, info;
 @mixin generateStyles($styles...) {
   @each $color in $colors {
     &-#{$color} {
-      $types: '';
-      @for $i from 1 to list.length($styles) {
-        $style: string.split(list.nth($styles, $i), '-');
-        $type: list.nth($style, 1);
-        $value: list.nth($style, list.length($style));
-        @for $j from 2 to list.length($style) {
-          $type: #{$type}-#{list.nth($style, $j)};
+      $types: ();
+      @if list.length($styles) > 0 {
+        @for $i from 0 to list.length($styles) {
+          $style: string.split(list.nth($styles, $i + 1), '-');
+          $type: list.nth($style, 1);
+          $value: list.nth($style, list.length($style));
+          @for $j from 2 to list.length($style) {
+            $type: #{$type}-#{list.nth($style, $j)};
+          }
+          // $types: #{$types} #{$type}-#{$color}-#{$value};
+          $types: list.join($types, #{$type}-#{$color}-#{$value});
         }
-
-        $types: #{$types} #{$type}-#{$color}-#{$value};
+        @apply #{$types};
       }
-      @apply #{$types};
       @content;
     }  
   }
