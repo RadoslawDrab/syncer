@@ -10,6 +10,9 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias
+  },
+  server: {
+    port: 3001
   }
 })
 

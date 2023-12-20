@@ -1,11 +1,12 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["env.d.ts", "tailwind.config.ts", "src/**/*", "src/**/*.vue"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
     "baseUrl": "./src/",
     "paths": {
       "shared/*": ["../../shared/*"],
@@ -13,8 +14,9 @@
       "views/*": ["views/*"],
       "stores/*": ["stores/*"],
       "router/*": ["router/*"],
-      "utils/*": ["utils/*"],
-      "assets/*": ["assets/*"]
+      "utils/*": ["utils/*", "assets/utils/*"],
+      "assets/*": ["assets/*"],
+      "config/*": ["../*"]
     }
   }
 }
