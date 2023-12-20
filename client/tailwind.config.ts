@@ -1,5 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+import type { Config } from 'tailwindcss'
+import resolveConfig from 'tailwindcss/resolveConfig'
+
+const config: Config = {
+  content: [],
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -89,3 +93,6 @@ export default {
   },
   plugins: []
 }
+
+export default config
+export const tailwind = resolveConfig(config)
