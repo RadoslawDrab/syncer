@@ -1,7 +1,7 @@
 import { colors } from 'config/tailwind.config'
 
 export interface ButtonStyle {
-  type: ButtonType
+  type?: ButtonType
   color: ButtonColor
 }
 export type ButtonType = 'default' | 'outline' | 'transparent'

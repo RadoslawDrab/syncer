@@ -2,10 +2,15 @@
   import type { ButtonStyle } from 'types/button';
   
   const props = defineProps<AppButtonProps>()
+  const buttonStyle = props.buttonStyle
 
-  const buttonClassName = ['btn', props.buttonStyle && props.buttonStyle.type !== 'default' ? `btn-${props.buttonStyle.type}-${props.buttonStyle.color}` : '']
-
-  interface AppButtonProps {
+  const buttonClassName = buttonStyle ? 
+    buttonStyle.type && buttonStyle.type !== 'default' ? 
+      `btn-${buttonStyle.type}-${buttonStyle.color}` : 
+      `btn-${buttonStyle.color}` 
+    : ''  
+    
+  export interface AppButtonProps {
     buttonStyle?: ButtonStyle
   }
 
