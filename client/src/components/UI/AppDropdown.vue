@@ -3,7 +3,7 @@
 
   import type { Position, HorizontalPosition, VerticalPosition } from 'types/index'
 
-  const props = defineProps<ButtonDropdownProps>()
+  const props = defineProps<AppDropdownProps>()
 
   const id = ref<string>('button-dropdown-' + crypto.randomUUID())
   const contentIsShown = ref<boolean>(false)
@@ -76,14 +76,14 @@
     contentIsShown.value = false
   }
   
-  interface ButtonDropdownProps {
+  interface AppDropdownProps {
     contentPosition?: Position
   }
 </script>
 
 <template>
   <div :id="id" class="button-dropdown" @focusout.stop="onFocusOut">
-    <button @click="toggleDropdown" class="button btn btn-transparent-primary btn-rect">
+    <button @click="toggleDropdown" class="button btn btn-transparent-primary">
       <slot name="button">Button</slot>
     </button>
     <div v-show="contentIsShown" class="content" :style="contentPosition">
