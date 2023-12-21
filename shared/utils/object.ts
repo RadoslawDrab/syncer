@@ -1,4 +1,4 @@
-import { ObjectKeys } from '../types/global'
+import { ObjectKeys } from '../types'
 
 export function filterObject<Value extends any>(
 	obj: ObjectKeys<Value>,
