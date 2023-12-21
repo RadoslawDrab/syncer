@@ -13,10 +13,10 @@
       "shared/*": ["../../shared/*"],
       "components/*": ["components/*"],
       "views/*": ["views/*"],
-      "stores/*": ["stores/*"],
       "router/*": ["router/*"],
       "utils/*": ["utils/*", "assets/utils/*", "../../shared/utils/*"],
       "assets/*": ["assets/*"],
+      "composables/*": ["composables/*"],
       "types/*": ["types/*", "../../shared/types/*"],
       "config/*": ["../*"]
     }
