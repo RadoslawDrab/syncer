@@ -25,7 +25,7 @@ $colors: primary, secondary, success, warning, danger, info;
     }  
   }
 }
-@mixin states($light, $dark, $generateStyles: false) {
+@mixin states($light, $dark: (), $generateStyles: false) {
   $lightKeys: map.keys($light);
   $darkKeys: map.keys($dark);
 
@@ -43,24 +43,31 @@ $colors: primary, secondary, success, warning, danger, info;
       }
     }
   }
-  @each $key in $darkKeys {
-    $values: map.get($dark, $key);
-    @each $value in $values {
-      @if $key != default {
-        $darkValues: list.join($darkValues, string.unquote('dark:' + $key + ':' + $value), space);
-      } 
-      @else {
-        $darkValues: list.join($darkValues, string.unquote('dark:' + $value), space);
+  @if list.length($darkKeys) > 0 {
+    @each $key in $darkKeys {
+      $values: map.get($dark, $key);
+      @each $value in $values {
+        @if $key != default {
+          $darkValues: list.join($darkValues, string.unquote('dark:' + $key + ':' + $value), space);
+        } 
+        @else {
+          $darkValues: list.join($darkValues, string.unquote('dark:' + $value), space);
+        }
       }
     }
-    $values: list.join($lightValues, $darkValues, space);
-    @if $generateStyles {
-      @include generateStyles($values...) {
-        @content;
-      }
-    } 
-    @else {
-      @apply #{$values};
+  } 
+  @else {
+    @each $value in $lightValues {
+      $darkValues: list.join($darkValues, string.unquote('dark:' + $value), space)
     }
+  }
+  $values: list.join($lightValues, $darkValues, space);
+  @if $generateStyles {
+    @include generateStyles($values...) {
+      @content;
+    }
+  } 
+  @else {
+    @apply #{$values};
   }
 }
