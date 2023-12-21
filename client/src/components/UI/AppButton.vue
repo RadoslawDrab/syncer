@@ -12,12 +12,13 @@
     
   export interface AppButtonProps {
     buttonStyle?: ButtonStyle
+    class?: string | string[]
   }
 
 </script>
 
 <template>
-  <button :class="buttonClassName">
+  <button :class="['btn', buttonClassName, props.class]">
     <slot>Button</slot>
   </button>
 </template>
