@@ -1,0 +1,30 @@
+@import 'assets/main.scss';
+
+header {
+  @apply sticky top-0 left-0 px-4 py-3 mb-5 flex justify-between items-center gap-1;
+  @include states((default: bg-light border-secondary-200 text-secondary-800), (default: bg-dark border-secondary-800 text-secondary-200));
+
+  &::before {
+    @apply content-[''] -z-10 absolute bottom-0 left-1/2 -translate-x-1/2 w-screen h-full bg-inherit border-b-2 border-inherit;
+  }
+  & > div {
+    @apply flex items-center gap-4 bg-inherit border-inherit;
+    nav {
+      @apply absolute top-full inset-x-0 w-full p-7 bg-inherit border-b-2 border-inherit flex flex-col items-start gap-2;
+      @apply sm:static sm:h-auto sm:w-auto sm:border-0 sm:p-0 sm:flex-row sm:flex;  
+    }
+  }
+}
+
+.v-enter-active,
+.v-leave-active {
+  @apply transition-all duration-500;
+}
+.v-leave-from,
+.v-enter-to {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.v-enter-from,
+.v-leave-to {
+  clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+}
