@@ -32,7 +32,7 @@
       default: {
         x = [{
           type: horizontal === 'left' ? 'right' : 'left',
-          value: '100%'
+          value: '0%'
         }]
         break
       }
@@ -93,13 +93,21 @@
 </template>
 
 <style scoped lang='scss'>
-  .button-dropdown {
-    @apply relative;
-    .button {
-      @apply rounded-full p-0;
-    }
-    .content {
-      @apply absolute flex flex-col;
-    }
+.button-dropdown {
+  @apply relative;
+  .button {
+    @apply rounded-full p-0;
   }
+  .content {
+    @apply absolute flex flex-col;
+  }
+}
+.v-enter-active,
+.v-leave-active {
+  @apply transition-all duration-500;
+}
+.v-enter-from,
+.v-leave-to {
+  @apply opacity-0;
+}
 </style>
