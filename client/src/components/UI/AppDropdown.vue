@@ -2,6 +2,7 @@
   import { computed, ref } from 'vue';
 
   import type { Position, HorizontalPosition, VerticalPosition } from 'types/index'
+  import type { AppButtonProps } from './AppButton.vue';
 
   const props = defineProps<AppDropdownProps>()
 
@@ -78,17 +79,21 @@
   
   interface AppDropdownProps {
     contentPosition?: Position
+    buttonProps?: AppButtonProps
+    contentClass?: string | string[]
   }
 </script>
 
 <template>
   <div :id="id" class="button-dropdown" @focusout.stop="onFocusOut">
-    <button @click="toggleDropdown" class="button btn btn-transparent-primary">
+    <AppButton @click="toggleDropdown" class="button" :="buttonProps">
       <slot name="button">Button</slot>
-    </button>
-    <div v-show="contentIsShown" class="content" :style="contentPosition">
-      <slot name="content">Content</slot>
-    </div>
+    </AppButton>
+    <Transition>
+      <div v-show="contentIsShown" :class="['content', props.contentClass]" :style="contentPosition">
+        <slot name="content">Content</slot>
+      </div>
+    </Transition>
   </div>
 </template>
 
