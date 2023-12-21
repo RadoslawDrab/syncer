@@ -3,12 +3,12 @@ import { ref } from 'vue';
 import { PhHeadphones, PhList } from '@phosphor-icons/vue'
 
 import { tailwind } from 'config/tailwind.config'
+import { capitalizeFirstLetter } from 'shared/utils/string';
 import router from 'router';
 import useTheme from 'composables/useTheme';
 import useEventListener from 'composables/useEventListener';
 
-import AppHeaderLink from './AppHeaderLink.vue';
-import ButtonDropdown from './ButtonDropdown.vue';
+import LayoutHeaderLink from './LayoutHeaderLink.vue';
 
 
 const routes = router.getRoutes()
@@ -38,15 +38,15 @@ useEventListener(window, 'resize', (event) => {
     </button>
     <Transition>
       <nav v-show="!navIsHidden">
-        <AppHeaderLink v-for="route in routes" :key="route.name" :to="route.path">{{ route.name?.toString()[0].toUpperCase() + '' + route.name?.toString().slice(1) }}</AppHeaderLink>
+        <LayoutHeaderLink v-for="route in routes" :key="route.name" :to="route.path">{{ capitalizeFirstLetter(route.name?.toString() ?? '') }}</LayoutHeaderLink>
       </nav>
     </Transition>
-    <button class="btn btn-primary" @click="theme.toggle">{{ theme.value }}</button>
+    <button class="btn btn-primary" @click="theme.toggle">{{ capitalizeFirstLetter(theme.value) }}</button>
     <button :class="['sm:hidden btn btn-transparent-primary', navIsHidden ? 'text-inherit' : '']" @click="toggleNavigation">
       <PhList size="30" class="fill-current" />
     </button>
   </div>
-  <ButtonDropdown content-position="left-bottom">
+  <AppDropdown content-position="left-bottom">
     <template #button>
       <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
     </template>
@@ -58,7 +58,7 @@ useEventListener(window, 'resize', (event) => {
         <button class="btn btn-transparent-secondary w-max">Sign Out</button>
       </div>
     </template>
-  </ButtonDropdown>
+  </AppDropdown>
   </header>
 </template>
 
