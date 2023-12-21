@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { setError, setStatus } from '.'
 
 import { getData, setData } from 'config/firebase'
-import { compareArrays, filterObject, findObject, flattenObject, objectToArray } from 'shared/utils'
+import { compareArrays, filterObject, findObject, flattenObject, objectToArray } from 'shared/utils/object'
 import { ObjectKeys } from 'shared/types/global'
 
 export class Endpoint<Type extends { id: string }> {
