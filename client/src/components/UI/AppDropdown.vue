@@ -99,7 +99,7 @@
 
 <style scoped lang='scss'>
 .button-dropdown {
-  @apply relative;
+  @apply relative flex;
   .button {
     @apply rounded-full p-0;
   }
