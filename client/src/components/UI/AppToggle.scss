@@ -1,0 +1,18 @@
+@import 'assets/main.scss';
+
+.toggle {
+  --size: '200rem';
+  @apply flex rounded-3xl py-[0.2rem] pl-[0.2rem] pr-[1.25em] transition-all;
+  @include states((default: bg-secondary-300), (default: bg-secondary-700));
+  .knob {
+    @apply rounded-full aspect-square bg-primary-500 text-secondary-100 p-1;
+    @include states((default: bg-500), (), true);
+  }
+  &.active {
+    @apply pr-[0.2rem] pl-[1.25em];
+    .knob {
+      @apply text-primary-500;
+      @include states((default: bg-secondary-400), (default: bg-secondary-500));
+    }
+  }
+}
