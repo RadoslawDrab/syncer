@@ -21,11 +21,12 @@
     }
     // e.g btn-outline-primary
     &-outline {
+      @apply border-2;
+      @include states((default: bg-transparent, hover: text-secondary-100));
       @include states(
         (default: text-500 border-500, hover: bg-500, active: bg-600 border-600, focus-visible: bg-500), 
         (default: text-500 border-500, hover: border-600 bg-600, active: border-700 bg-700), 
         true) {
-        @include states((default: bg-transparent, hover: text-secondary-100));
         &:not(.btn-text-inherit) {
           @include states(
             (default: text-secondary-900, hover: text-secondary-100, focus-visible: text-secondary-900), 
@@ -36,7 +37,7 @@
     // e.g btn-transparent-primary
     &-transparent {
       @include generateStyles("text-500") {
-        @apply bg-transparent border-transparent dark:bg-transparent dark:border-transparent;
+        @include states((default: bg-transparent border-transparent));
       }
     }
     &-border {
